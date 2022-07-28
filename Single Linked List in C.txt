@@ -1,0 +1,380 @@
+#include <stdio.h>
+#include<stdlib.h>
+
+struct node* add_first();
+struct node* add_last();
+struct node* add_position();
+struct node* add_at_data();
+struct node* delete_first();
+struct node* delete_last();
+struct node* delete_position();
+struct node* delete_linked_list();
+struct node* reverse_list();
+struct node* sort_list();
+void display();
+//---------------------------------------------------------------------------------------------------------------------------------------------
+struct node
+{
+  int data;
+  struct node *link;
+};
+struct node *start=NULL;
+ struct node *temp;
+ int count=1;
+
+int main()
+{
+    int ch;
+    while(ch!=99){
+printf("\t\t\nMENU :\n\t\t1.ADD AT FIRST\n\t\t2.ADD AT LAST\n\t\t3.ADD AT CERTAIN POSITION\n\t\t4.ADD AFTER GIVEN DATA\n\t\t5.DISPLAY LIST\n");
+printf("\t\t6.DELETE AT FIRST\n\t\t7.DELETE AT LAST\n\t\t8.DELETE AT CERTAIN POSITION");
+printf("\n\t\t9.DELETE HOLE LINKED LIST\n\t\t0.REVERSE THE LIST\n\t\t11.SORT LINKED LIST\n\t\t99.Stop\nAnswer : ");
+scanf("%d",&ch);
+switch(ch){
+case 1:
+    start=add_first(start);
+    count++;
+    break;
+case 2:
+    start=add_last(start);
+    count++;
+    break;
+case 3:
+    start=add_position(start);
+    count++;
+    break;
+case 4:
+    start=add_at_data(start);
+    count++;
+    break;
+case 5:
+    display(start);
+    break;
+    case 6:
+    start=delete_first(start);
+    count--;
+    break;
+     case 7:
+    start=delete_last(start);
+    count--;
+    break;
+     case 8:
+    start=delete_position(start);
+    count--;
+    break;
+    case 9:
+    start=delete_linked_list(start);
+    count=1;
+    break;
+    case 0:
+    start=reverse_list(start);
+    break;
+    case 11:
+    start=sort_list(start);
+    break;
+case 99:
+    break;
+default:
+    printf("Enter Correct choice \n");
+}
+    }
+  return 0;
+}
+//------------------------------------------------------------------------------------------------------------------------------
+
+int creat_list()
+{
+    temp=(struct node*)malloc(sizeof(struct node));
+    printf("Enter Element :");
+    scanf("%d",&temp->data);
+    temp->link=NULL;
+}
+struct node* add_last(struct node *start)
+{
+   creat_list();
+    struct node *ptr;
+    if(start==NULL)
+    {
+        start=temp;
+        return start;
+    }
+    else
+    ptr=start;
+    while(ptr->link!=NULL)
+    {
+        ptr=ptr->link;
+    }
+    ptr->link=temp;
+    return start;
+}
+//------------------------------------------------------------------------------------------------------------------------------
+
+struct node*  add_first(struct node *start)
+{
+    creat_list();
+    if(start==NULL)
+    {
+        start=temp;
+       return start;
+    }
+    else
+    {
+        temp->link=start;
+        start=temp;
+       return start;
+    }
+}
+//------------------------------------------------------------------------------------------------------------------------------
+
+void display(struct node *ptr)
+{
+    if(start==NULL)
+    {
+        printf("[List Is Empty]\n");
+    }
+    while(ptr!=NULL)
+    {
+        printf("%d ",ptr->data);
+        ptr=ptr->link;
+    }
+}
+//------------------------------------------------------------------------------------------------------------------------------
+
+struct node*  add_position(struct node* start)
+{
+    struct node *ptr;
+    int position;
+    printf("Enter Position :");
+    scanf("%d",&position);
+    if(position>count)
+    {
+        printf("Position Overloaded !Do You want Add this element Last of the list \n1.Yes\n2.NO\nAnswer :");
+        int c;
+        scanf("%d",&c);
+        if(c==1)
+        {
+            add_last(start);
+        }
+        else
+        {
+            return start;
+        }
+    }
+    else
+    if(position==1)
+    {
+        add_first(start);
+    }
+    else
+    {
+    creat_list();
+       ptr=start;
+       for (int i=1;i<position-1;i++)
+       {
+           ptr=ptr->link;
+       }
+       temp->link=ptr->link;
+       ptr->link=temp;
+       return start;
+    }
+}
+//------------------------------------------------------------------------------------------------------------------------------
+
+struct node* add_at_data(struct node* start)
+{
+    struct node *ptr=start;
+    int value;
+    int flag=0;
+    printf("Enter Data :");
+    scanf("%d",&value);
+    while(ptr!=NULL)
+    {
+        if(ptr->data==value)
+        {
+            flag=1;
+            break;
+        }
+        else
+        ptr=ptr->link;
+    }
+    if(flag!=1)
+    {
+        printf("Entered Data Not Found \n");
+    }
+    else
+    {
+    creat_list();
+    temp->link=ptr->link;
+    ptr->link=temp;}
+   return start;
+}
+//------------------------------------------------------------------------------------------------------------------------------
+
+struct node*  delete_first(struct node *start)
+{
+    struct node *ptr;
+    if(start==NULL)
+    {
+        printf("[List is Already Empty]");
+        return start;
+    }
+    else
+    {
+        ptr=start;
+        start=start->link;
+        free(ptr);
+        return start;
+    }
+}
+//------------------------------------------------------------------------------------------------------------------------------
+
+struct node*  delete_last(struct node *start)
+{
+    struct node *ptr;
+    ptr=start;
+    if(start==NULL)
+    {
+        printf("[List is Already Empty]");
+        return start;
+    }
+    else
+        if(start->link==NULL)
+    {
+        delete_first(start);
+    }
+    else
+    {
+        while(ptr->link->link!=NULL)
+        {
+            ptr=ptr->link;
+        }
+        free(ptr->link);
+        ptr->link=NULL;
+        return start;
+    }
+}
+//------------------------------------------------------------------------------------------------------------------------------
+
+struct node*  delete_position(struct node *start)
+{
+    struct node *ptr=start,*temp2;
+    int position;
+    printf("Enter Position :");
+    scanf("%d",&position);
+    if(position>count)
+        {
+        printf("Entered Position Not Available !\n");
+    return start;
+        }
+        else
+    if(start==NULL)
+    {
+         printf("[List is Already Empty]");
+        return start;
+    }
+    else
+    if(position==1)
+    {
+        delete_first(start);
+    }
+    else
+    {
+      for(int i=1;i<position;i++)
+      {
+          temp2=ptr;
+          ptr=ptr->link;
+      }
+      temp2->link=ptr->link;
+      free(ptr);
+      return start;
+    }
+}
+//------------------------------------------------------------------------------------------------------------------------------
+
+struct node* delete_linked_list(struct node *start)
+{
+    if(start==NULL)
+    {
+        printf("[List is Already Empty]");
+        return start;
+    }
+    else
+    {
+        struct node *ptr;
+        ptr=start;
+        while(ptr!=NULL)
+        {
+            ptr=ptr->link;
+            free(start);
+            start=ptr;
+        }
+        return start;
+    }
+}
+//------------------------------------------------------------------------------------------------------------------------------
+struct node*  reverse_list(struct node *start)
+{
+     struct node *ptr,*temp2=NULL;
+    if(start==NULL)
+    {
+        printf("[List is Already Empty]");
+        return start;
+    }
+    else
+    {
+        while(start!=NULL)
+        {
+            ptr=start->link;
+            start->link=temp2;
+            temp2=start;
+            start=ptr;
+        }
+        start=temp2;
+    return start;
+    }
+}
+//------------------------------------------------------------------------------------------------------------------------------
+
+struct node* sort_list(struct node *start)
+{
+    struct node *ptr=start,*temp;
+    int temp2;
+    printf("1.Ascending \n2.Descending \nANSWER :");
+    int ch;
+    scanf("%d",&ch);
+    if(start==NULL)
+    {
+        printf("Sorting Not Possible !\n");
+        return start;
+    }
+    else
+    {
+        while(ptr->link!=NULL)
+        {
+            temp=ptr->link;
+            while(temp!=NULL)
+            {
+                if(ch==1){
+                if(ptr->data>temp->data)
+                {
+                    temp2=ptr->data;
+                    ptr->data=temp->data;
+                    temp->data=temp2;
+                } }
+                else
+                {
+                 if(ptr->data<temp->data)
+                {
+                    temp2=ptr->data;
+                    ptr->data=temp->data;
+                    temp->data=temp2;
+                }
+                }
+                temp=temp->link;
+            }
+            ptr=ptr->link;
+        }
+        return start;
+    }
+}
+//------------------------------------------------------------------------------------------------------------------------------
